@@ -56,4 +56,4 @@ async def sortie(interaction: discord.Interaction, serie: app_commands.Choice[st
         await interaction.response.send_message("{0}\nLa prochaine sortie pour **I am the child of this house** est celle du chapitre **{1}** !\nElle est prévue au **{2}** !".format('<@' + str(interaction.user.id) + '>', ch_chapitre, ch_date))
 
 # Exécution du bot
-bot.run("MTE1NTU5Mjg3MTQ0MTg1ODY2Mw.G1-ezH.1_hlw-ASJ-ru5BC2Ec8sIX34o9TExk83_v0bJQ")
+bot.run()
