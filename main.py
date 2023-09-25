@@ -10,8 +10,8 @@ tree = app_commands.CommandTree(client)
 
 # Stockage release
 release_chap = {
-    'vm' : {'titre': "I became the villains mother", 'chapitre': "", 'date': "", 'image': "https://i.imgur.com/mLDfvZG.png  "},
-    'ch' : {'titre': "I am the child of this house", 'chapitre': "", 'date': "", 'image': "https://i.imgur.com/ji6brr1.png"}
+    'vm' : {'titre': "I became the villains mother", 'chapitre': "", 'date': "", 'image': "https://i.imgur.com/mLDfvZG.png"},
+    'ch' : {'titre': "I am the child of this house", 'chapitre': "", 'date': "", 'image': "https://i.imgur.com/HVZkrWC.png"}
 }
 
 # Initialisation du bot
