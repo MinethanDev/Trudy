@@ -52,5 +52,12 @@ async def sortie(interaction: discord.Interaction, serie: app_commands.Choice[st
         embed.set_image(url=release_chap[serie.value]['image'])
         await interaction.response.send_message('{0}'.format('<@' + str(interaction.user.id) + '>'), embed=embed)
 
+# Commande /annonce
+@bot.tree.command(name="annonce", description="Envoyer une annonce des sorties du jour")
+@app_commands.choices(serie=[
+    app_commands.Choice(name="I became the villains mother", value="vm"),
+    app_commands.Choice(name="I am the child of this house", value="ch"),
+    ])
+
 # Exécution du bot
 bot.run()
