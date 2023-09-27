@@ -57,7 +57,20 @@ async def sortie(interaction: discord.Interaction, serie: app_commands.Choice[st
 @app_commands.choices(serie=[
     app_commands.Choice(name="I became the villains mother", value="vm"),
     app_commands.Choice(name="I am the child of this house", value="ch"),
+    app_commands.Choice(name="Toutes", value="all")
     ])
-
+async def sortie(interaction: discord.Interaction, serie: app_commands.Choice[str]):
+        embed = discord.Embed(
+            title="Nouvelles sorties !",
+            description="Les sorties du jours sont :",
+            color=discord.Color.blue()
+        )
+        embed.set_author(name="Trudy", icon_url="https://i.imgur.com/X3LwsLZ.jpg")
+        if release_chap[serie.value] != "all":
+            embed.add_field(name=release_chap[serie.value]["titre"], value=f"Chapitre {release_chap[serie.value]['chapitre']}", inline=False)
+        elif release_chap[serie.value] == "all":
+            embed.add_field(name="I became the villains mother", value=f"Chapitre {release_chap['vm']['chapitre']}", inline=False)
+            embed.add_field(name="I am the child of this house", value=f"Chapitre {release_chap['ch']['chapitre']}", inline=False)
+        await interaction.response.send_message(embed=embed)
 # Exécution du bot
 bot.run()
