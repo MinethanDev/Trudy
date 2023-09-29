@@ -8,6 +8,9 @@ bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 client = discord.Client(intents=discord.Intents.all())
 tree = app_commands.CommandTree(client)
 
+# Liste admins
+admin_list = [690579650329444383, 701852626253381633]
+
 # Stockage release
 release_chap = {
     'vm' : {'titre': "I became the villains mother", 'chapitre': "Non programmé", 'date': "Non programmé", 'image': "https://i.imgur.com/mLDfvZG.png", 'image_released': "https://i.imgur.com/qqrGUgv.png", 'roleid': "1024373574716362783"},
@@ -28,10 +31,13 @@ async def on_ready():
     app_commands.Choice(name="I am the child of this house", value="ch"),
     ])
 async def sortie(interaction: discord.Interaction, serie: app_commands.Choice[str], chapitre: str, date: str):
-    release_chap[serie.value]['chapitre'] = chapitre
-    release_chap[serie.value]['date'] = date
-    await interaction.response.send_message("{0}\nTu viens de programmer le chapitre **{1}** de la série **{2}** au **{3}** !".format('<@' + str(interaction.user.id) + '>', chapitre, release_chap[serie.value]['titre'], date))
-    print("{0} a programmé le chapitre {1} de la série {2} au {3}".format(interaction.user, release_chap[serie.value]['chapitre'], release_chap[serie.value]['titre'], date))
+    if interaction.user.id in admin_list :
+        release_chap[serie.value]['chapitre'] = chapitre
+        release_chap[serie.value]['date'] = date
+        await interaction.response.send_message("{0}\nTu viens de programmer le chapitre **{1}** de la série **{2}** au **{3}** !".format('<@' + str(interaction.user.id) + '>', chapitre, release_chap[serie.value]['titre'], date))
+        print("{0} a programmé le chapitre {1} de la série {2} au {3}".format(interaction.user, release_chap[serie.value]['chapitre'], release_chap[serie.value]['titre'], date))
+    else:
+        await interaction.response.send_message("Désolé {0}, tu n'as pas la permission pour programmer une série.".format('<@' + str(interaction.user.id) + '>'))
 
 # Commande /sortie
 @bot.tree.command(name="sortie", description="Savoir quand est prévue la prochaine sortie d'une série !")
@@ -66,23 +72,26 @@ async def sortie(interaction: discord.Interaction, serie: app_commands.Choice[st
     app_commands.Choice(name="Toutes", value="all")
     ])
 async def sortie(interaction: discord.Interaction, serie: app_commands.Choice[str]):
-    embed = discord.Embed(
-        title="Nouvelles sorties !",
-        description="Les sorties du jour Traducfr1, la traduction pour tous",
-        color=discord.Color.blue()
-    )
-    embed.set_author(name="Trudy", icon_url="https://i.imgur.com/X3LwsLZ.jpg")
-    if serie.value != "all":
-        embed.set_image(url=release_chap[serie.value]['image_released'])
-        embed.add_field(name=release_chap[serie.value]["titre"], value=f"Chapitre {release_chap[serie.value]['chapitre']}", inline=False)
-        embed.add_field(name="Mention", value="<@&"+ release_chap[serie.value]["roleid"] + ">", inline=False)
+    if interaction.user.id in admin_list :
+        embed = discord.Embed(
+            title="Nouvelles sorties !",
+            description="Les sorties du jour Traducfr1, la traduction pour tous",
+            color=discord.Color.blue()
+        )
+        embed.set_author(name="Trudy", icon_url="https://i.imgur.com/X3LwsLZ.jpg")
+        if serie.value != "all":
+            embed.set_image(url=release_chap[serie.value]['image_released'])
+            embed.add_field(name=release_chap[serie.value]["titre"], value=f"Chapitre {release_chap[serie.value]['chapitre']}", inline=False)
+            embed.add_field(name="Mention", value="<@&"+ release_chap[serie.value]["roleid"] + ">", inline=False)
+        else:
+            embed.set_image(url="https://i.imgur.com/EX7ithU.png")
+            embed.add_field(name="I became the villains mother", value=f"Chapitre {release_chap['vm']['chapitre']}", inline=False)
+            embed.add_field(name="I am the child of this house", value=f"Chapitre {release_chap['ch']['chapitre']}", inline=False)
+            embed.add_field(name="Mentions", value="{0}\n{1}".format("<@&"+ release_chap["vm"]["roleid"] + ">", "<@&"+ release_chap["ch"]["roleid"] + ">"), inline=False)
+        await interaction.response.send_message(embed=embed)
+        print("{0} a annoncé la sortie du prochain chapitre de {1}".format(interaction.user, serie.value))
     else:
-        embed.set_image(url="https://i.imgur.com/EX7ithU.png")
-        embed.add_field(name="I became the villains mother", value=f"Chapitre {release_chap['vm']['chapitre']}", inline=False)
-        embed.add_field(name="I am the child of this house", value=f"Chapitre {release_chap['ch']['chapitre']}", inline=False)
-        embed.add_field(name="Mentions", value="{0}\n{1}".format("<@&"+ release_chap["vm"]["roleid"] + ">", "<@&"+ release_chap["ch"]["roleid"] + ">"), inline=False)
-    await interaction.response.send_message(embed=embed)
-    print("{0} a annoncé la sortie du prochain chapitre de {1}".format(interaction.user, serie.value))
+        await interaction.response.send_message("Désolé {0}, tu n'as pas la permission pour annoncer une série.".format('<@' + str(interaction.user.id) + '>'))
 
 # Commande /deprogrammer
 @bot.tree.command(name="deprogrammer", description="Annuler la sortie d'un chapitre")
@@ -91,10 +100,13 @@ async def sortie(interaction: discord.Interaction, serie: app_commands.Choice[st
     app_commands.Choice(name="I am the child of this house", value="ch")
     ])
 async def deprogrammer(interaction: discord.Interaction, serie: app_commands.Choice[str]):
-    release_chap[serie.value]['chapitre'] = "Non programmé"
-    release_chap[serie.value]['date'] = "Non programmé"
-    await interaction.response.send_message("{0}\nTu viens de déprogrammer le prochain chapitre de **{1}**".format('<@' + str(interaction.user.id) + '>', release_chap[serie.value]['titre']))
-    print("{0} a déprogrammé la sortie du prochain chapitre de {1}".format(interaction.user, release_chap[serie.value]['titre']))
+    if interaction.user.id in admin_list :
+        release_chap[serie.value]['chapitre'] = "Non programmé"
+        release_chap[serie.value]['date'] = "Non programmé"
+        await interaction.response.send_message("{0}\nTu viens de déprogrammer le prochain chapitre de **{1}**".format('<@' + str(interaction.user.id) + '>', release_chap[serie.value]['titre']))
+        print("{0} a déprogrammé la sortie du prochain chapitre de {1}".format(interaction.user, release_chap[serie.value]['titre']))
+    else:
+        await interaction.response.send_message("Désolé {0}, tu n'as pas la permission pour déprogrammer une série.".format('<@' + str(interaction.user.id) + '>'))
 
 # Exécution du bot
 bot.run()
