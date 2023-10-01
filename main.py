@@ -88,7 +88,7 @@ async def sortie(interaction: discord.Interaction, serie: app_commands.Choice[st
             embed.add_field(name="I became the villains mother", value=f"Chapitre {release_chap['vm']['chapitre']}", inline=False)
             embed.add_field(name="I am the child of this house", value=f"Chapitre {release_chap['ch']['chapitre']}", inline=False)
             embed.add_field(name="Mentions", value="{0}\n{1}".format("<@&"+ release_chap["vm"]["roleid"] + ">", "<@&"+ release_chap["ch"]["roleid"] + ">"), inline=False)
-        await interaction.response.send_message("<@1009761200214659122>" ,embed=embed)
+        await interaction.response.send_message("<@&1009761200214659122>" ,embed=embed)
         print("{0} a annoncé la sortie du prochain chapitre de {1}".format(interaction.user, serie.value))
     else:
         await interaction.response.send_message("Désolé {0}, tu n'as pas la permission pour annoncer une série.".format('<@' + str(interaction.user.id) + '>'))
